@@ -22,6 +22,11 @@
   <script>
   var NumId=0;
   $(function() {
+
+    $( "#save" ).click(function() {
+      var content = $( "#canvas" ).text();
+      console.log(content);
+    })
     
     $( "#catalog" ).accordion();
 
@@ -38,9 +43,10 @@
         currentMousePosY = parseInt(ui.helper.position().top) + 3 ;
         id = "item_" + NumId;
         NumId++;
-        $( "<div class='answerdropped' id='" + id +"' style='left:" + currentMousePosX + "px;top:" + currentMousePosY + "px; position:fixed; font-size:20px; font-family:arial;'></div>" ).text( ui.draggable.text() ).appendTo( this );
+        $( "<div class='answerdropped' id='" + id +"' style='left:" + currentMousePosX + "px;top:" + currentMousePosY + "px; position:absolute; font-size:20px; font-family:arial;'></div>" ).text( ui.draggable.text() ).appendTo( this );
         $( ".answerdropped" ).draggable({
           cursor: "move",
+          containment: "parent",
         });
         $(".answerdropped").resizable({
           create: function(event, ui) {
@@ -124,7 +130,7 @@
   </div>
 </div>
 
-<button>Enregistrer</button>
+<button id="save">Enregistrer</button>
  
  
 </body>
