@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>jQuery UI Droppable - Shopping Cart Demo</title>
+  <link rel="stylesheet" href="//code.jquery.com/ui/1.11.3/themes/smoothness/jquery-ui.css">
+  <script src="//code.jquery.com/jquery-1.10.2.js"></script>
+  <script src="//code.jquery.com/ui/1.11.3/jquery-ui.js"></script>
+  <style>
+  h1 { padding: .2em; margin: 0; }
+  #categories { width: 300px; margin-right: 2em; float:right; }
+  #cart { width: 200px; float: left; margin-top: 1em; }
+  /* style the list to maximize the droppable hitarea */
+  #cart ol { margin: 0; padding: 1em 0 1em 3em; }
+  ul {padding:0;}
+  li {list-style-type:none;}
+  .answer{float:right;}
+  .item li{ display:inline-block; font-size:20px; font-family:arial;}
+  #canvas {float:left;width:850px; border:1px solid gray; margin-left:20px;}
+  .answerdropped {position:fixed;}
+  </style>
+  <script>
+  var NumId=0;
+  $(function() {
+    
+    $( "#catalog" ).accordion();
+
+    $( ".answer" ).draggable({
+      
+      helper: "clone",
+      cursor: "move",
+    });
+
+    $( "#canvas" ).droppable({
+      accept: ".answer",
+      drop: function( event, ui ) {
+        currentMousePosX = ui.helper.position().left;
+        currentMousePosY = parseInt(ui.helper.position().top) + 3 ;
+        id = "item_" + NumId;
+        NumId++;
+        $( "<div class='answerdropped' id='" + id +"' style='left:" + currentMousePosX + "px;top:" + currentMousePosY + "px; position:fixed; font-size:20px; font-family:arial;'></div>" ).text( ui.draggable.text() ).appendTo( this );
+        $( ".answerdropped" ).draggable({
+          cursor: "move",
+        });
+        $(".answerdropped").resizable({
+          create: function(event, ui) {
+              initDiagonal = getContentDiagonal("#"+this.id);
+              initFontSize = parseInt($("#"+this.id).css("font-size"));
+          },
+          resize: function(e, ui) {
+              var newDiagonal = getContentDiagonal("#"+this.id);
+              var ratio = newDiagonal / initDiagonal;
+
+              $("#"+this.id).css("font-size", initFontSize + ratio * 3);
+          }
+        });
+
+      }
+    }).sortable({
+      items: "li:not(.placeholder)",
+      sort: function() {
+        // gets added unintentionally by droppable interacting with sortable
+        // using connectWithSortable fixes this, but doesn't allow you to customize active/hoverClass options
+        $( this ).removeClass( "ui-state-default" );
+      }
+    });
+  });
+
+  function getContentDiagonal(itemId) {
+      var contentWidth = $(itemId).width();
+      var contentHeight = $(itemId).height();
+      return contentWidth * contentWidth + contentHeight * contentHeight;
+  };
+</script>
+</head>
+<body>
+
+<div id="canvas">
+  <img src="img/formulaire.gif" style="width:850px">
+</div>
+
+<div id="categories">
+  <h1 class="ui-widget-header">Catégories</h1>
+  <div id="catalog">
+    <h2><a href="#">Civilité</a></h2>
+    <div>
+      <ul>
+        <ul class="item">
+          <li>Nom</li>
+          <li class="answer">Chupin</li>
+        </ul>
+        <ul class="item">
+          <li>Prénom</li>
+          <li class="answer">Corentin<li>
+        </ul>
+      </ul>
+    </div>
+    <h2><a href="#">Bags</a></h2>
+    <div>
+      <ul>
+        <ul class="item">
+          <li>Nom</li>
+          <li class="answer">Chupin</li>
+        </ul>
+        <ul class="item">
+          <li>Prénom</li>
+          <li class="answer">Corentin<li>
+        </ul>
+      </ul>
+    </div>
+    <h2><a href="#">Gadgets</a></h2>
+    <div>
+      <ul>
+        <ul class="item">
+          <li>Nom</li>
+          <li class="answer">Chupin</li>
+        </ul>
+        <ul class="item">
+          <li>Prénom</li>
+          <li class="answer">Corentin<li>
+        </ul>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<button>Enregistrer</button>
+ 
+ 
+</body>
+</html>
